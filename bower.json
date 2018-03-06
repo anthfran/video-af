@@ -10,7 +10,15 @@
     "paper-menu-button": "PolymerElements/paper-menu-button#^2.1.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.1.0",
-    "web-animations-js": "web-animations/web-animations-js#^2.3.1"
+    "web-animations-js": "web-animations/web-animations-js#^2.3.1",
+    "paper-input": "PolymerElements/paper-input#^2.1.1",
+    "paper-progress": "PolymerElements/paper-progress#^2.1.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.3",
+    "paper-styles": "PolymerElements/paper-styles#^2.1.0",
+    "iron-behaviors": "PolymerElements/iron-behaviors#^2.1.0",
+    "paper-behaviors": "PolymerElements/paper-behaviors#^2.0.1",
+    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^2.1.0",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^2.1.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
