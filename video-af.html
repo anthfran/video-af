@@ -6,12 +6,17 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link href="../iron-icons/av-icons.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+
 
 <dom-module id="video-af">
   <template>
     <style>
     :host {
       display: block;
+      --paper-menu-button : {
+        padding: 0;
+      }
     }
     .video {
       max-width: 960px;
@@ -31,9 +36,11 @@
     }
     .controls-left {
       float: left;
+      height: 40px;
     }
     .controls-right {
       float: right;
+      height: 40px;
     }
     .controlbuttons{
       display: inline-block;
@@ -44,7 +51,10 @@
       --paper-progress-active-color: var(--paper-light-blue-500);
       --paper-progress-secondary-color: var(--paper-light-blue-100);
       --video-slider-height: 5px;
-      --video-slider-knob-color: transparent;
+      /* --video-slider-knob-color: transparent; */
+    }
+    .volume {
+      width: 100px;
     }
     </style>
     <div class="video">
@@ -72,14 +82,14 @@
             <video-slider id="volume" class="volume controlbuttons" value="100" on-immediate-value-change="_volumeChange" min="0" max="100"></video-slider>
           </div>
           <div class="controls-right">
-            <paper-menu-button>
-              <paper-icon-button icon="av:hd" slot="dropdown-trigger" class="control-icon controlbuttons" alt="HD"></paper-icon-button>
+            <paper-menu-button vertical-align="bottom" horizontal-align="right">
+              <paper-icon-button icon="icons:settings" slot="dropdown-trigger" class="control-icon controlbuttons" alt="HD" noink></paper-icon-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item>Share</paper-item>
-                <paper-item>Settings</paper-item>
-                <paper-item>Help</paper-item>
+                <paper-item>720p</paper-item>
+                <paper-item>360p</paper-item>
               </paper-listbox>
             </paper-menu-button>
+            <paper-icon-button id="full" class="control-icon controlbuttons" icon="icons:fullscreen" noink></paper-icon-button>
           </div>
         </div>
       </div>
@@ -133,6 +143,9 @@ class VideoAf extends Polymer.Element {
   }
   _volumeChange(){
     this.$.video.volume = this.$.volume.immediateValue/100;
+    if (this.$.volume.immediateValue > 50) this.$.mute.icon = "av:volume-up"
+    else if (this.$.volume.immediateValue < 50 && this.$.volume.immediateValue != 0) this.$.mute.icon = "av:volume-down"
+    else if (this.$.volume.immediateValue == 0) this.$.mute.icon = "av:volume-mute"
   }
   _onProgress() {
     const buffered = this.$.video.buffered;
@@ -148,7 +161,6 @@ class VideoAf extends Polymer.Element {
     this.set('_position', this.$.video.currentTime);
   }
   _tapPlayPause() {
-    console.log("play");
     if (this.$.video.paused) {
       this.$.video.play();
       this.$.play.icon = "av:pause";
