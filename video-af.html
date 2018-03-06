@@ -1,5 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="video-slider.html">
+<link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link href="../iron-icons/av-icons.html" rel="import">
 
@@ -17,19 +20,30 @@
       margin-bottom: 0px;
       margin-left: auto;
     }
-    .controls {
-      position: relative;
+    .controlbar {
+      height: 40px;
+      display: block;
     }
     .control-icon {
-
+      height: 40px;
+      width: 40px;
+    }
+    .controls-left {
+      float: left;
+    }
+    .controls-right {
+      float: right;
+    }
+    .controlbuttons{
+      display: inline-block;
     }
     .seek {
       width: 100%;
       padding: 0;
       --paper-progress-active-color: var(--paper-light-blue-500);
       --paper-progress-secondary-color: var(--paper-light-blue-100);
-      --paper-slider-height: 5px;
-      --paper-slider-knob-color: transparent;
+      --video-slider-height: 5px;
+      --video-slider-knob-color: transparent;
     }
     </style>
     <div class="video">
@@ -48,12 +62,24 @@
         Your browser does not support the video tag.
       </video>
       <div class="controls">
-        <paper-slider class="seek" value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
-        </paper-slider>
-        <div class="controlbuttons">
-          <paper-icon-button id="play" class="control-icon" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
-          <paper-icon-button id="mute" class="control-icon" icon="av:volume-up" on-tap="_volumeMute" noink></paper-icon-button>
-          <paper-slider id="volume" class="volume" value="100" on-immediate-value-change="_volumeChange" min="0" max="100">
+        <video-slider class="seek" value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
+        </video-slider>
+        <div class="controlbar">
+          <div class="controls-left">
+            <paper-icon-button id="play" class="control-icon controlbuttons" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
+            <paper-icon-button id="mute" class="control-icon controlbuttons" icon="av:volume-up" on-tap="_volumeMute" noink></paper-icon-button>
+            <video-slider id="volume" class="volume controlbuttons" value="100" on-immediate-value-change="_volumeChange" min="0" max="100"></video-slider>
+          </div>
+          <div class="controls-right">
+            <paper-menu-button>
+              <paper-icon-button icon="av:hd" slot="dropdown-trigger" class="control-icon controlbuttons" alt="HD"></paper-icon-button>
+              <paper-listbox slot="dropdown-content">
+                <paper-item>Share</paper-item>
+                <paper-item>Settings</paper-item>
+                <paper-item>Help</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+          </div>
         </div>
       </div>
   </div>
