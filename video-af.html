@@ -23,7 +23,7 @@
     .control-icon {
 
     }
-    paper-slider {
+    .seek {
       width: 100%;
       padding: 0;
       --paper-progress-active-color: var(--paper-light-blue-500);
@@ -48,11 +48,12 @@
         Your browser does not support the video tag.
       </video>
       <div class="controls">
-        <paper-slider value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
+        <paper-slider class="seek" value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
         </paper-slider>
         <div class="controlbuttons">
           <paper-icon-button id="play" class="control-icon" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
-          <paper-icon-button id="mute" class="control-icon" icon="av:volume-up" on-tap="_mute" noink></paper-icon-button>
+          <paper-icon-button id="mute" class="control-icon" icon="av:volume-up" on-tap="_volumeMute" noink></paper-icon-button>
+          <paper-slider id="volume" class="volume" value="100" on-immediate-value-change="_volumeChange" min="0" max="100">
         </div>
       </div>
   </div>
@@ -90,14 +91,21 @@ class VideoAf extends Polymer.Element {
   _changePosition() {
     this.$.video.currentTime = this._position;
   }
-  _mute() {
+  _volumeMute() {
     if (this.$.video.muted) {
       this.$.video.muted = false;
+      this.$.video.volume = this._volume/100;
+      this.$.volume.value = this._volume;
       this.$.mute.icon = "av:volume-up";
     } else {
       this.$.video.muted = true;
+      this._volume = this.$.volume.value;
+      this.$.volume.value = 0;
       this.$.mute.icon = "av:volume-mute";
     }
+  }
+  _volumeChange(){
+    this.$.video.volume = this.$.volume.immediateValue/100;
   }
   _onProgress() {
     const buffered = this.$.video.buffered;
