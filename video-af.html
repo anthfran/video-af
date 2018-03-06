@@ -26,13 +26,20 @@
       margin-bottom: 0px;
       margin-left: auto;
     }
+    .controls {
+      position: relative;
+      bottom: 44px;
+      height: 40px;
+    }
     .controlbar {
       height: 40px;
       display: block;
+      background-color: rgba(40, 40, 40, .8);
     }
     .control-icon {
       height: 40px;
       width: 40px;
+      color: white;
     }
     .controls-left {
       float: left;
@@ -59,7 +66,6 @@
     </style>
     <div class="video">
       <video id="video" on-click="_clickVideo"
-      controls
       on-loadedmetadata="_onLoadedMetadata"
       on-progress="_onProgress"
       on-timeupdate="_onTimeUpdate"
