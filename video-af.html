@@ -19,10 +19,9 @@
     }
     .controls {
       position: relative;
-      top: -18px;
     }
-    #sliderContainer {
-      margin: 0;
+    .control-icon {
+
     }
     paper-slider {
       width: 100%;
@@ -30,6 +29,7 @@
       --paper-progress-active-color: var(--paper-light-blue-500);
       --paper-progress-secondary-color: var(--paper-light-blue-100);
       --paper-slider-height: 5px;
+      --paper-slider-knob-color: transparent;
     }
     </style>
     <div class="video">
@@ -42,17 +42,17 @@
       playsinline
       preload
       oncontextmenu="return false;"
-      poster="https://firebasestorage.googleapis.com/v0/b/nelk-5c1ba.appspot.com/o/{{name}}_poster.jpg?alt=media"
+      poster=[[posterUrl]]
       controlsList="nodownload">
-      <source src="https://firebasestorage.googleapis.com/v0/b/nelk-5c1ba.appspot.com/o/{{name}}_720.mp4?alt=media" type="video/mp4" >
-
+      <source src=[[videoUrl]] type="video/mp4" >
         Your browser does not support the video tag.
       </video>
       <div class="controls">
         <paper-slider value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
         </paper-slider>
         <div class="controlbuttons">
-          <paper-icon-button id="play" class="play" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
+          <paper-icon-button id="play" class="control-icon" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
+          <paper-icon-button id="mute" class="control-icon" icon="av:volume-up" on-tap="_mute" noink></paper-icon-button>
         </div>
       </div>
   </div>
@@ -71,10 +71,8 @@ class VideoAf extends Polymer.Element {
   static get is() { return 'video-af'; }
   static get properties() {
     return {
-      name: {
-        type: String,
-        value: 'boobs'
-      },
+      videoUrl: String,
+      posterUrl: String,
       _position: {
         type: Number,
         value: 0
@@ -91,6 +89,15 @@ class VideoAf extends Polymer.Element {
   }
   _changePosition() {
     this.$.video.currentTime = this._position;
+  }
+  _mute() {
+    if (this.$.video.muted) {
+      this.$.video.muted = false;
+      this.$.mute.icon = "av:volume-up";
+    } else {
+      this.$.video.muted = true;
+      this.$.mute.icon = "av:volume-mute";
+    }
   }
   _onProgress() {
     const buffered = this.$.video.buffered;
