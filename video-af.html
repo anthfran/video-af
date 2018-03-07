@@ -21,12 +21,6 @@
         padding: 0;
       };
     }
-    video::-webkit-media-controls {
-      display:none !important;
-    }
-    video::-webkit-media-controls-enclosure {
-      display:none !important;
-    }
     .video {
       width: 100%;
       position: relative;
@@ -41,7 +35,6 @@
       left: 0;
       height: 49px;
       width: 100%;
-      z-index: 2147483648;
     }
     .controlbar {
       height: 40px;
@@ -89,8 +82,9 @@
       --video-slider-bar-color: var(--video-theme-color);
     }
     </style>
-    <div class="video" on-mouseenter="_videoMouseEnter" on-mouseleave="_videoMouseLeave">
-      <video id="video" on-click="_clickVideo"
+    <div class="video" on-mouseover="_videoMouseEnter" on-mouseleave="_videoMouseLeave">
+      <video id="video"
+      on-click="_tapPlayPause"
       on-loadedmetadata="_onLoadedMetadata"
       on-progress="_onProgress"
       on-timeupdate="_onTimeUpdate"
