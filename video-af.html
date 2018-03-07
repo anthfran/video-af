@@ -21,6 +21,12 @@
         padding: 0;
       };
     }
+    video::-webkit-media-controls {
+      display:none !important;
+    }
+    video::-webkit-media-controls-enclosure {
+      display:none !important;
+    }
     .video {
       width: 100%;
       position: relative;
@@ -32,13 +38,16 @@
     .controls {
       position: absolute;
       bottom: 0;
+      left: 0;
       height: 49px;
       width: 100%;
+      z-index: 2147483648;
     }
     .controlbar {
       height: 40px;
       display: block;
       background: linear-gradient(to bottom,rgba(0,0,0,0.5) 100%, rgba(0,0,0,0) 0%);
+      z-index: 2147483648;
     }
     .control-icon {
       height: 40px;
@@ -195,9 +204,8 @@ class VideoAf extends Polymer.Element {
   }
   _convertSecondsToTime(seconds, set) {
     if (seconds == 0) return "00:00"
-    console.log(seconds);
     var date = new Date(null);
-    date.setSeconds(seconds); // specify value for SECONDS here
+    date.setSeconds(seconds);
     if (seconds > 3600) return date.toISOString().substr(11, 8);
     else return date.toISOString().substr(14, 5);
   }
@@ -213,11 +221,9 @@ class VideoAf extends Polymer.Element {
     this.updateStyles({'--video-seek-knob': "transparent" });
   }
   _videoMouseEnter() {
-    console.log("enter");
     this.set('_hideControls', false);
   }
   _videoMouseLeave() {
-    console.log("leave");
     if (!this.$.video.paused) this.set('_hideControls', true);
   }
   _tapPlayPause() {
@@ -230,7 +236,14 @@ class VideoAf extends Polymer.Element {
     }
   }
   _fullscreenToggle () {
-
+    const video = this.$.video;
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) {
+      video.mozRequestFullScreen(); // Firefox
+    } else if (video.webkitRequestFullscreen) {
+      video.webkitRequestFullscreen(); // Chrome and Safari
+    }
   }
 }
 
