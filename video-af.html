@@ -22,17 +22,18 @@
       };
     }
     .video {
-      max-width: 960px;
       width: 100%;
+      position: relative;
       margin-top: 0px;
       margin-right: auto;
       margin-bottom: 0px;
       margin-left: auto;
     }
     .controls {
-      position: relative;
-      bottom: 49px;
-      height: 45px;
+      position: absolute;
+      bottom: 0;
+      height: 49px;
+      width: 100%;
     }
     .controlbar {
       height: 40px;
@@ -79,7 +80,7 @@
       --video-slider-bar-color: var(--video-theme-color);
     }
     </style>
-    <div class="video">
+    <div class="video" on-mouseenter="_videoMouseEnter" on-mouseleave="_videoMouseLeave">
       <video id="video" on-click="_clickVideo"
       on-loadedmetadata="_onLoadedMetadata"
       on-progress="_onProgress"
@@ -93,7 +94,8 @@
       <source src=[[videoUrl]] type="video/mp4" >
         Your browser does not support the video tag.
       </video>
-      <div class="controls">
+
+      <div class="controls" hidden$=[[_hideControls]] on-mouseleave="_videoMouseLeave">
         <video-slider class="seek" value="{{_position}}" on-change="_changePosition" on-mouseenter="_seekMouseEnter" on-mouseleave="_seekMouseLeave" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
         </video-slider>
         <div class="controlbar">
@@ -151,6 +153,10 @@ class VideoAf extends Polymer.Element {
           current: "00:00",
           total: "00:00"
         }
+      },
+      _hideControls: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -201,13 +207,18 @@ class VideoAf extends Polymer.Element {
     this.set('_time.current', this._convertSecondsToTime(currentTime));
   }
   _seekMouseEnter() {
-    console.log("enter");
     this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
   }
   _seekMouseLeave() {
-    console.log("leave");
     this.updateStyles({'--video-seek-knob': "transparent" });
-
+  }
+  _videoMouseEnter() {
+    console.log("enter");
+    this.set('_hideControls', false);
+  }
+  _videoMouseLeave() {
+    console.log("leave");
+    if (!this.$.video.paused) this.set('_hideControls', true);
   }
   _tapPlayPause() {
     if (this.$.video.paused) {
