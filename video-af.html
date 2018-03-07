@@ -100,8 +100,8 @@
         </video-slider>
         <div class="controlbar">
           <div class="controls-left">
-            <paper-icon-button id="play" class="control-icon controlbuttons" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
-            <paper-icon-button id="mute" class="control-icon controlbuttons" icon="av:volume-up" on-tap="_volumeMute" noink></paper-icon-button>
+            <paper-icon-button id="play" class="control-icon controlbuttons" icon="av:play-arrow" on-click="_tapPlayPause" noink></paper-icon-button>
+            <paper-icon-button id="mute" class="control-icon controlbuttons" icon="av:volume-up" on-click="_volumeMute" noink></paper-icon-button>
             <video-slider id="volume" class="volume controlbuttons" value="100" on-immediate-value-change="_volumeChange" min="0" max="100"></video-slider>
             <span class="time">[[_time.current]] / [[_time.total]]</span>
           </div>
@@ -113,7 +113,7 @@
                 <paper-item>360p</paper-item>
               </paper-listbox>
             </paper-menu-button>
-            <paper-icon-button id="full" class="control-icon controlbuttons" icon="icons:fullscreen" noink></paper-icon-button>
+            <paper-icon-button id="full" class="control-icon controlbuttons" icon="icons:fullscreen" on-click="_fullscreenToggle" noink></paper-icon-button>
           </div>
         </div>
       </div>
@@ -229,7 +229,9 @@ class VideoAf extends Polymer.Element {
       this.$.play.icon = "av:play-arrow";
     }
   }
+  _fullscreenToggle () {
 
+  }
 }
 
 window.customElements.define(VideoAf.is, VideoAf);
