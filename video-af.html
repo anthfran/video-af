@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer-element.html">
+videoUrl<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="video-slider.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
@@ -95,7 +95,7 @@
       oncontextmenu="return false;"
       poster=[[posterUrl]]
       controlsList="nodownload">
-      <source src=[[videoUrl]] type="video/mp4" >
+      <source src=[[_videoSrc]] type="video/mp4" >
         Your browser does not support the video tag.
       </video>
 
@@ -111,10 +111,11 @@
           </div>
           <div class="controls-right">
             <paper-menu-button vertical-align="bottom" horizontal-align="right">
-              <paper-icon-button icon="icons:settings" slot="dropdown-trigger" class="control-icon controlbuttons" alt="HD" noink></paper-icon-button>
+              <paper-icon-button icon="icons:settings" slot="dropdown-trigger" class="control-icon controlbuttons" hidden$=[[_singleVideo]] noink></paper-icon-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item>720p</paper-item>
-                <paper-item>360p</paper-item>
+                <template is="dom-repeat" items="{{_qualitySelect}}">
+                  <paper-item>{{item.name}}</paper-item>
+                </template>
               </paper-listbox>
             </paper-menu-button>
             <paper-icon-button id="chromecast" class="control-icon controlbuttons" icon="hardware:cast" on-click="" noink hidden></paper-icon-button>
@@ -138,8 +139,13 @@ class VideoAf extends Polymer.Element {
   static get is() { return 'video-af'; }
   static get properties() {
     return {
-      videoUrl: String,
+      videoUrl: {
+        type: Object,
+        observer: '_parseVideoUrl'
+      },
       posterUrl: String,
+      _qualitySelect: Array,
+      _videoSrc: String,
       _position: {
         type: Number,
         value: 0
@@ -162,8 +168,28 @@ class VideoAf extends Polymer.Element {
       _hideControls: {
         type: Boolean,
         value: false
-      }
+      },
+      _singleVideo: Boolean
     };
+  }
+  _parseVideoUrl(videoUrl) {
+    if (typeof videoUrl === "string") {
+      this.set('_videoSrc', videoUrl);
+      this.set('_singleVideo', true);
+    } else {
+      const videoKeys = Object.keys(videoUrl);
+      this.set('_videoSrc', videoUrl[videoKeys[0]]);
+      if (videoKeys.length < 2) this.set('_singleVideo', true);
+      else {
+        const qualitySelect = videoKeys.map((quality) => {
+          return {
+            name: quality,
+            source: videoUrl[quality]
+          }
+        });
+        this.set('_qualitySelect', qualitySelect);
+      }
+    }
   }
   _changePosition() {
     this.$.video.currentTime = this._position;
