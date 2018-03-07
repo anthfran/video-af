@@ -14,9 +14,12 @@
     <style>
     :host {
       display: block;
-      --paper-menu-button : {
+      --video-seek-knob: transparent;
+      --video-theme-color: var(--paper-light-blue-500);
+      --video-theme-secondary-color: var(--paper-light-blue-100);
+      --paper-menu-button: {
         padding: 0;
-      }
+      };
     }
     .video {
       max-width: 960px;
@@ -28,13 +31,13 @@
     }
     .controls {
       position: relative;
-      bottom: 44px;
-      height: 40px;
+      bottom: 49px;
+      height: 45px;
     }
     .controlbar {
       height: 40px;
       display: block;
-      background-color: rgba(40, 40, 40, .8);
+      background: linear-gradient(to bottom,rgba(0,0,0,0.5) 100%, rgba(0,0,0,0) 0%);
     }
     .control-icon {
       height: 40px;
@@ -43,6 +46,7 @@
     }
     .controls-left {
       float: left;
+      width: 60%;
       height: 40px;
     }
     .controls-right {
@@ -52,16 +56,27 @@
     .controlbuttons{
       display: inline-block;
     }
+    .time {
+      color: white;
+      padding-left: 10px;
+      position: relative;
+      top: 1px;
+    }
     .seek {
       width: 100%;
       padding: 0;
-      --paper-progress-active-color: var(--paper-light-blue-500);
-      --paper-progress-secondary-color: var(--paper-light-blue-100);
+      --paper-progress-active-color: var(--video-theme-color);
+      --paper-progress-secondary-color: var(--video-theme-secondary-color);
       --video-slider-height: 5px;
-      /* --video-slider-knob-color: transparent; */
+      --video-slider-knob-start-border-color: var(--video-seek-knob);
+      --video-slider-knob-color: var(--video-seek-knob);
     }
     .volume {
-      width: 100px;
+      width: 25%;
+      --paper-progress-active-color: var(--video-theme-color);
+      --video-slider-knob-start-border-color: var(--video-theme-color);
+      --video-slider-knob-start-color: var(--video-theme-color);
+      --video-slider-bar-color: var(--video-theme-color);
     }
     </style>
     <div class="video">
@@ -79,13 +94,14 @@
         Your browser does not support the video tag.
       </video>
       <div class="controls">
-        <video-slider class="seek" value="{{_position}}" on-change="_changePosition" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
+        <video-slider class="seek" value="{{_position}}" on-change="_changePosition" on-mouseenter="_seekMouseEnter" on-mouseleave="_seekMouseLeave" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
         </video-slider>
         <div class="controlbar">
           <div class="controls-left">
             <paper-icon-button id="play" class="control-icon controlbuttons" icon="av:play-arrow" on-tap="_tapPlayPause" noink></paper-icon-button>
             <paper-icon-button id="mute" class="control-icon controlbuttons" icon="av:volume-up" on-tap="_volumeMute" noink></paper-icon-button>
             <video-slider id="volume" class="volume controlbuttons" value="100" on-immediate-value-change="_volumeChange" min="0" max="100"></video-slider>
+            <span class="time">[[_time.current]] / [[_time.total]]</span>
           </div>
           <div class="controls-right">
             <paper-menu-button vertical-align="bottom" horizontal-align="right">
@@ -128,6 +144,13 @@ class VideoAf extends Polymer.Element {
           downloaded:0,
           duration:0
         }
+      },
+      _time: {
+        type: Object,
+        value: {
+          current: "00:00",
+          total: "00:00"
+        }
       }
     };
   }
@@ -138,7 +161,6 @@ class VideoAf extends Polymer.Element {
     if (this.$.video.muted) {
       this.$.video.muted = false;
       this.$.video.volume = this._volume/100;
-      this.$.volume.value = this._volume;
       this.$.mute.icon = "av:volume-up";
     } else {
       this.$.video.muted = true;
@@ -149,6 +171,7 @@ class VideoAf extends Polymer.Element {
   }
   _volumeChange(){
     this.$.video.volume = this.$.volume.immediateValue/100;
+    this.$.video.muted = false;
     if (this.$.volume.immediateValue > 50) this.$.mute.icon = "av:volume-up"
     else if (this.$.volume.immediateValue < 50 && this.$.volume.immediateValue != 0) this.$.mute.icon = "av:volume-down"
     else if (this.$.volume.immediateValue == 0) this.$.mute.icon = "av:volume-mute"
@@ -162,9 +185,29 @@ class VideoAf extends Polymer.Element {
   _onLoadedMetadata() {
     let duration = this.$.video.duration;
     this.set('_buffer.duration', duration);
+    this.set('_time.total', this._convertSecondsToTime(duration));
+  }
+  _convertSecondsToTime(seconds, set) {
+    if (seconds == 0) return "00:00"
+    console.log(seconds);
+    var date = new Date(null);
+    date.setSeconds(seconds); // specify value for SECONDS here
+    if (seconds > 3600) return date.toISOString().substr(11, 8);
+    else return date.toISOString().substr(14, 5);
   }
   _onTimeUpdate() {
-    this.set('_position', this.$.video.currentTime);
+    const currentTime = this.$.video.currentTime;
+    this.set('_position', currentTime);
+    this.set('_time.current', this._convertSecondsToTime(currentTime));
+  }
+  _seekMouseEnter() {
+    console.log("enter");
+    this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
+  }
+  _seekMouseLeave() {
+    console.log("leave");
+    this.updateStyles({'--video-seek-knob': "transparent" });
+
   }
   _tapPlayPause() {
     if (this.$.video.paused) {
@@ -175,6 +218,7 @@ class VideoAf extends Polymer.Element {
       this.$.play.icon = "av:play-arrow";
     }
   }
+
 }
 
 window.customElements.define(VideoAf.is, VideoAf);
