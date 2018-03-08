@@ -1,21 +1,38 @@
 # \<video-af\>
 
-Custom HTML5 Video by Anthony Francella
+Custom Polymer HTML element that displays HTML5 Video with Material Design controls
+by Anthony Francella
 
-## Install the Polymer-CLI
+## Demo
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+https://www.webcomponents.org/element/anthfran/video-af/demo/demo/index.html
 
-## Viewing Your Element
+## Installation
 
+`bower install --save anthfran/video-af`
+
+## Usage
+
+### Include this custom element
+`<link rel="import" href="../bower_components/video-af/video-af.html">`
+
+### Add to your app
+<!--
 ```
-$ polymer serve
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="video-af.html">
+    <next-code-block></next-code-block>  
+    </template>
+</custom-element-demo>
 ```
-
-## Running Tests
-
+-->
+```html
+<video-af
+  video-url={
+  "720p":"black_coffee_720p.mp4",
+  "360p":"black_coffee_360p.mp4"}
+  poster-url="black_coffee.jpg">
+</video-af>
 ```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
