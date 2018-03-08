@@ -95,7 +95,7 @@ videoUrl<link rel="import" href="../polymer/polymer-element.html">
       oncontextmenu="return false;"
       poster=[[posterUrl]]
       controlsList="nodownload">
-      <source src=[[_videoSrc]] type="video/mp4" >
+      <source id="videosrc" src=[[_videoSrc]] type="video/mp4" >
         Your browser does not support the video tag.
       </video>
 
@@ -114,7 +114,7 @@ videoUrl<link rel="import" href="../polymer/polymer-element.html">
               <paper-icon-button icon="icons:settings" slot="dropdown-trigger" class="control-icon controlbuttons" hidden$=[[_singleVideo]] noink></paper-icon-button>
               <paper-listbox slot="dropdown-content">
                 <template is="dom-repeat" items="{{_qualitySelect}}">
-                  <paper-item>{{item.name}}</paper-item>
+                  <paper-item on-tap="_qualityChange">[[item.name]]</paper-item>
                 </template>
               </paper-listbox>
             </paper-menu-button>
@@ -256,6 +256,14 @@ class VideoAf extends Polymer.Element {
       this.$.video.pause();
       this.$.play.icon = "av:play-arrow";
     }
+  }
+  _qualityChange(e) {
+    const paused = this.$.video.paused;
+    const currentTime = this.$.video.currentTime;
+    this.set('_videoSrc', this.videoUrl[e.path[0].innerHTML]);
+    this.$.video.load();
+    this.$.video.currentTime = currentTime;
+    if (!paused) this.$.video.play();
   }
   _fullscreenToggle () {
     const video = this.$.video;

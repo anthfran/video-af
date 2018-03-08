@@ -19,7 +19,15 @@
   </head>
   <body>
     <div class="vertical-section-container centered">
-      <h3>Basic video-af demo</h3>
+      <h3>Basic video-af demo - single video source</h3>
+      <demo-snippet>
+        <template>
+          <video-af video-url="black_coffee_720p.mp4"} poster-url="black_coffee.jpg"></video-af>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <h3>video-af demo - multiple video sources</h3>
       <demo-snippet>
         <template>
           <video-af video-url={"720p":"black_coffee_720p.mp4","360p":"black_coffee_360p.mp4"} poster-url="black_coffee.jpg"></video-af>
