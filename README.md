@@ -16,19 +16,17 @@ https://www.webcomponents.org/element/anthfran/video-af/demo/demo/index.html
 ### Include this custom element
 `<link rel="import" href="../bower_components/video-af/video-af.html">`
 
-### Add to your app
-<!--
+### A Single video to your app
 ```
-<custom-element-demo>
-  <template>
-    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="video-af.html">
-    <next-code-block></next-code-block>  
-    </template>
-</custom-element-demo>
+<video-af
+  video-url="black_coffee_720p.mp4"
+  poster-url="black_coffee.jpg">
+</video-af>
 ```
--->
-```html
+
+### A video with quality control
+
+```
 <video-af
   video-url={
   "720p":"black_coffee_720p.mp4",
