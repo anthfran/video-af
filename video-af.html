@@ -1,4 +1,4 @@
-videoUrl<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="video-slider.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
@@ -107,7 +107,7 @@ videoUrl<link rel="import" href="../polymer/polymer-element.html">
             <paper-icon-button id="play" class="control-icon controlbuttons" icon="av:play-arrow" on-click="_tapPlayPause" noink></paper-icon-button>
             <paper-icon-button id="mute" class="control-icon controlbuttons" icon="av:volume-up" on-click="_volumeMute" noink></paper-icon-button>
             <video-slider id="volume" class="volume controlbuttons" value="100" on-immediate-value-change="_volumeChange" min="0" max="100"></video-slider>
-            <span class="time">[[_time.current]] / [[_time.total]]</span>
+            <span class="time">[[_timeCurrent]] / [[_timeTotal]]</span>
           </div>
           <div class="controls-right">
             <paper-menu-button vertical-align="bottom" horizontal-align="right">
@@ -158,13 +158,8 @@ class VideoAf extends Polymer.Element {
           duration:0
         }
       },
-      _time: {
-        type: Object,
-        value: {
-          current: "00:00",
-          total: "00:00"
-        }
-      },
+      _timeCurrent: { type: String, value: "0:00" },
+      _timeTotal: { type: String, value: "0:00" },
       _hideControls: {
         type: Boolean,
         value: false
@@ -220,9 +215,10 @@ class VideoAf extends Polymer.Element {
     }
   }
   _onLoadedMetadata() {
-    let duration = this.$.video.duration;
+    const duration = this.$.video.duration;
     this.set('_buffer.duration', duration);
-    this.set('_time.total', this._convertSecondsToTime(duration));
+    const humanTime = this._convertSecondsToTime(duration);
+    this.set('_timeTotal', humanTime);
   }
   _convertSecondsToTime(seconds, set) {
     if (seconds == 0) return "00:00"
@@ -234,7 +230,7 @@ class VideoAf extends Polymer.Element {
   _onTimeUpdate() {
     const currentTime = this.$.video.currentTime;
     this.set('_position', currentTime);
-    this.set('_time.current', this._convertSecondsToTime(currentTime));
+    this.set('_timeCurrent', this._convertSecondsToTime(currentTime));
   }
   _seekMouseEnter() {
     this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
