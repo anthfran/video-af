@@ -22,20 +22,10 @@
         padding: 0;
       };
     }
-    .video {
-      width: 100%;
-      position: relative;
-      margin-top: 0px;
-      margin-right: auto;
-      margin-bottom: 0px;
-      margin-left: auto;
-    }
-    .controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 49px;
-      width: 100%;
+    .control-icon {
+      height: 40px;
+      width: 40px;
+      color: white;
     }
     .controlbar {
       height: 40px;
@@ -43,10 +33,14 @@
       background: linear-gradient(to bottom,rgba(0,0,0,0.5) 100%, rgba(0,0,0,0) 0%);
       z-index: 2147483648;
     }
-    .control-icon {
-      height: 40px;
-      width: 40px;
-      color: white;
+    .controlbuttons { display: inline-block;
+    }
+    .controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 49px;
+      width: 100%;
     }
     .controls-left {
       float: left;
@@ -57,19 +51,26 @@
       float: right;
       height: 40px;
     }
-    .controlbuttons{
-      display: inline-block;
-    }
     .mid-play-button {
       position: absolute;
       top: calc(50% - 50px);
-      left: calc(50% - 50px);;
+      left: calc(50% - 50px);
+      ;
     }
     .mid-play-button-icon {
       color: white;
       height: 100px;
       width: 100px;
       opacity: .85;
+    }
+    .seek {
+      width: 100%;
+      padding: 0;
+      --paper-progress-active-color: var(--video-theme-color);
+      --paper-progress-secondary-color: var(--video-theme-secondary-color);
+      --video-slider-height: 5px;
+      --video-slider-knob-start-border-color: var(--video-seek-knob);
+      --video-slider-knob-color: var(--video-seek-knob);
     }
     .time {
       color: white;
@@ -86,14 +87,13 @@
       width: calc(100% - 16px);
       height: 18px;
     }
-    .seek {
+    .video {
       width: 100%;
-      padding: 0;
-      --paper-progress-active-color: var(--video-theme-color);
-      --paper-progress-secondary-color: var(--video-theme-secondary-color);
-      --video-slider-height: 5px;
-      --video-slider-knob-start-border-color: var(--video-seek-knob);
-      --video-slider-knob-color: var(--video-seek-knob);
+      position: relative;
+      margin-top: 0px;
+      margin-right: auto;
+      margin-bottom: 0px;
+      margin-left: auto;
     }
     .volume {
       width: 25%;
@@ -148,164 +148,164 @@
           </div>
         </div>
       </div>
-  </div>
-</template>
+    </div>
+  </template>
 
-<script>
-/**
-* `video-af`
-* Custom HTML5 Video by Anthony Francella
-*
-* @customElement
-* @polymer
-* @demo demo/index.html
-*/
-class VideoAf extends Polymer.Element {
-  static get is() { return 'video-af'; }
-  static get properties() {
-    return {
-      videoTitle: String,
-      videoUrl: {
-        type: Object,
-        observer: '_parseVideoUrl'
-      },
-      posterUrl: String,
-      _qualitySelect: Array,
-      _videoSrc: String,
-      _position: {
-        type: Number,
-        value: 0
-      },
-      _buffer: {
-        type: Object,
-        value: {
-          position: 0,
-          downloaded:0,
-          duration:0
-        }
-      },
-      _timeCurrent: { type: String, value: "00:00" },
-      _timeTotal: { type: String, value: "00:00" },
-      _hideControls: {
-        type: Boolean,
-        value: false
-      },
-      _hidePlaybutton :{
-        type: Boolean,
-        value: false
-      },
-      _singleVideo: Boolean
-    };
-  }
-  _parseVideoUrl(videoUrl) {
-    if (typeof videoUrl === "string") {
-      this.set('_videoSrc', videoUrl);
-      this.set('_singleVideo', true);
-    } else {
-      const videoKeys = Object.keys(videoUrl);
-      this.set('_videoSrc', videoUrl[videoKeys[0]]);
-      if (videoKeys.length < 2) this.set('_singleVideo', true);
-      else {
-        const qualitySelect = videoKeys.map((quality) => {
-          return {
-            name: quality,
-            source: videoUrl[quality]
+  <script>
+  /**
+  * `video-af`
+  * Custom HTML5 Video by Anthony Francella
+  *
+  * @customElement
+  * @polymer
+  * @demo demo/index.html
+  */
+  class VideoAf extends Polymer.Element {
+    static get is() { return 'video-af'; }
+    static get properties() {
+      return {
+        videoTitle: String,
+        videoUrl: {
+          type: Object,
+          observer: '_parseVideoUrl'
+        },
+        posterUrl: String,
+        _qualitySelect: Array,
+        _videoSrc: String,
+        _position: {
+          type: Number,
+          value: 0
+        },
+        _buffer: {
+          type: Object,
+          value: {
+            position: 0,
+            downloaded:0,
+            duration:0
           }
-        });
-        this.set('_qualitySelect', qualitySelect);
+        },
+        _timeCurrent: { type: String, value: "00:00" },
+        _timeTotal: { type: String, value: "00:00" },
+        _hideControls: {
+          type: Boolean,
+          value: false
+        },
+        _hidePlaybutton :{
+          type: Boolean,
+          value: false
+        },
+        _singleVideo: Boolean
+      };
+    }
+    _parseVideoUrl(videoUrl) {
+      if (typeof videoUrl === "string") {
+        this.set('_videoSrc', videoUrl);
+        this.set('_singleVideo', true);
+      } else {
+        const videoKeys = Object.keys(videoUrl);
+        this.set('_videoSrc', videoUrl[videoKeys[0]]);
+        if (videoKeys.length < 2) this.set('_singleVideo', true);
+        else {
+          const qualitySelect = videoKeys.map((quality) => {
+            return {
+              name: quality,
+              source: videoUrl[quality]
+            }
+          });
+          this.set('_qualitySelect', qualitySelect);
+        }
+      }
+    }
+    _changePosition() {
+      this.$.video.currentTime = this._position;
+    }
+    _volumeMute() {
+      if (this.$.video.muted) {
+        this.$.video.muted = false;
+        this.$.video.volume = this._volume/100;
+        this.$.mute.icon = "av:volume-up";
+      } else {
+        this.$.video.muted = true;
+        this._volume = this.$.volume.value;
+        this.$.volume.value = 0;
+        this.$.mute.icon = "av:volume-mute";
+      }
+    }
+    _volumeChange(){
+      this.$.video.volume = this.$.volume.immediateValue/100;
+      this.$.video.muted = false;
+      if (this.$.volume.immediateValue > 50) this.$.mute.icon = "av:volume-up"
+      else if (this.$.volume.immediateValue < 50 && this.$.volume.immediateValue != 0) this.$.mute.icon = "av:volume-down"
+      else if (this.$.volume.immediateValue == 0) this.$.mute.icon = "av:volume-mute"
+    }
+    _onProgress() {
+      const buffered = this.$.video.buffered;
+      if (buffered.length > 0) {
+        this.set('_buffer.downloaded', buffered.end(buffered.length-1));
+      }
+    }
+    _onLoadedMetadata() {
+      const duration = this.$.video.duration;
+      this.set('_buffer.duration', duration);
+      const humanTime = this._convertSecondsToTime(duration);
+      this.set('_timeTotal', humanTime);
+    }
+    _convertSecondsToTime(seconds, set) {
+      if (seconds == 0) return "00:00"
+      var date = new Date(null);
+      date.setSeconds(seconds);
+      if (seconds > 3600) return date.toISOString().substr(11, 8);
+      else return date.toISOString().substr(14, 5);
+    }
+    _onTimeUpdate() {
+      const currentTime = this.$.video.currentTime;
+      this.set('_position', currentTime);
+      this.set('_timeCurrent', this._convertSecondsToTime(currentTime));
+    }
+    _seekMouseEnter() {
+      this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
+    }
+    _seekMouseLeave() {
+      this.updateStyles({'--video-seek-knob': "transparent" });
+    }
+    _videoMouseEnter() {
+      this.set('_hideControls', false);
+    }
+    _videoMouseLeave() {
+      if (!this.$.video.paused) this.set('_hideControls', true);
+    }
+    _tapPlayPause() {
+      if (this.$.video.paused) {
+        this.$.video.play();
+        this.$.play.icon = "av:pause";
+        this.set('_hidePlaybutton', true);
+      } else {
+        this.$.video.pause();
+        this.$.play.icon = "av:play-arrow";
+        this.set('_hidePlaybutton', false);
+
+      }
+    }
+    _qualityChange(e) {
+      const paused = this.$.video.paused;
+      const currentTime = this.$.video.currentTime;
+      this.set('_videoSrc', this.videoUrl[e.path[0].innerHTML]);
+      this.$.video.load();
+      this.$.video.currentTime = currentTime;
+      if (!paused) this.$.video.play();
+    }
+    _fullscreenToggle () {
+      const video = this.$.video;
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen(); // Firefox
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen(); // Chrome and Safari
       }
     }
   }
-  _changePosition() {
-    this.$.video.currentTime = this._position;
-  }
-  _volumeMute() {
-    if (this.$.video.muted) {
-      this.$.video.muted = false;
-      this.$.video.volume = this._volume/100;
-      this.$.mute.icon = "av:volume-up";
-    } else {
-      this.$.video.muted = true;
-      this._volume = this.$.volume.value;
-      this.$.volume.value = 0;
-      this.$.mute.icon = "av:volume-mute";
-    }
-  }
-  _volumeChange(){
-    this.$.video.volume = this.$.volume.immediateValue/100;
-    this.$.video.muted = false;
-    if (this.$.volume.immediateValue > 50) this.$.mute.icon = "av:volume-up"
-    else if (this.$.volume.immediateValue < 50 && this.$.volume.immediateValue != 0) this.$.mute.icon = "av:volume-down"
-    else if (this.$.volume.immediateValue == 0) this.$.mute.icon = "av:volume-mute"
-  }
-  _onProgress() {
-    const buffered = this.$.video.buffered;
-    if (buffered.length > 0) {
-      this.set('_buffer.downloaded', buffered.end(buffered.length-1));
-    }
-  }
-  _onLoadedMetadata() {
-    const duration = this.$.video.duration;
-    this.set('_buffer.duration', duration);
-    const humanTime = this._convertSecondsToTime(duration);
-    this.set('_timeTotal', humanTime);
-  }
-  _convertSecondsToTime(seconds, set) {
-    if (seconds == 0) return "00:00"
-    var date = new Date(null);
-    date.setSeconds(seconds);
-    if (seconds > 3600) return date.toISOString().substr(11, 8);
-    else return date.toISOString().substr(14, 5);
-  }
-  _onTimeUpdate() {
-    const currentTime = this.$.video.currentTime;
-    this.set('_position', currentTime);
-    this.set('_timeCurrent', this._convertSecondsToTime(currentTime));
-  }
-  _seekMouseEnter() {
-    this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
-  }
-  _seekMouseLeave() {
-    this.updateStyles({'--video-seek-knob': "transparent" });
-  }
-  _videoMouseEnter() {
-    this.set('_hideControls', false);
-  }
-  _videoMouseLeave() {
-    if (!this.$.video.paused) this.set('_hideControls', true);
-  }
-  _tapPlayPause() {
-    if (this.$.video.paused) {
-      this.$.video.play();
-      this.$.play.icon = "av:pause";
-      this.set('_hidePlaybutton', true);
-    } else {
-      this.$.video.pause();
-      this.$.play.icon = "av:play-arrow";
-      this.set('_hidePlaybutton', false);
 
-    }
-  }
-  _qualityChange(e) {
-    const paused = this.$.video.paused;
-    const currentTime = this.$.video.currentTime;
-    this.set('_videoSrc', this.videoUrl[e.path[0].innerHTML]);
-    this.$.video.load();
-    this.$.video.currentTime = currentTime;
-    if (!paused) this.$.video.play();
-  }
-  _fullscreenToggle () {
-    const video = this.$.video;
-    if (video.requestFullscreen) {
-      video.requestFullscreen();
-    } else if (video.mozRequestFullScreen) {
-      video.mozRequestFullScreen(); // Firefox
-    } else if (video.webkitRequestFullscreen) {
-      video.webkitRequestFullscreen(); // Chrome and Safari
-    }
-  }
-}
-
-window.customElements.define(VideoAf.is, VideoAf);
-</script>
+  window.customElements.define(VideoAf.is, VideoAf);
+  </script>
 </dom-module>
