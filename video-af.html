@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer-element.html">
+i<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="video-slider.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
@@ -16,7 +16,7 @@
     :host {
       display: block;
       height: 100%;
-      --video-seek-knob: transparent;
+      --video-seek-knob: var(--video-theme-color);
       --button-text-color: white;
       --video-theme-color: var(--paper-light-blue-500);
       --video-theme-secondary-color: var(--paper-light-blue-200);
@@ -73,6 +73,7 @@
       --paper-progress-secondary-color: var(--video-theme-secondary-color);
       --video-slider-height: 5px;
       --video-slider-knob-start-border-color: var(--video-seek-knob);
+      --video-slider-knob-start-color: var(--video-seek-knob);
       --video-slider-knob-color: var(--video-seek-knob);
     }
     .time {
@@ -104,6 +105,7 @@
       --paper-progress-active-color: var(--video-theme-color);
       --video-slider-knob-start-border-color: var(--video-theme-color);
       --video-slider-knob-start-color: var(--video-theme-color);
+      --video-slider-knob-color: var(--video-theme-color);
       --video-slider-bar-color: var(--video-theme-color);
     }
     </style>
@@ -221,8 +223,6 @@
     _onLoadedMetadata() {
       const duration = this.$.video.duration;
       const humanTime = this._convertSecondsToTime(duration);
-      console.log(duration);
-
       this.setProperties({
         _timeTotal: humanTime,
         _buffer: {
@@ -238,10 +238,11 @@
     _parseVideoUrl(videoUrl) {
       if (typeof videoUrl === "string") {
         this.setProperties({_videoSrc: videoUrl, _singleVideo: true });
-      } else if (typeof videoUrl === "object"){
+      } else if (typeof videoUrl === "object") {
         const videoKeys = Object.keys(videoUrl);
-        this.set('_videoSrc', videoUrl[videoKeys[0]]);
-        if (videoKeys.length < 2) this.set('_singleVideo', true);
+        if (videoKeys.length == 1) {
+          this.setProperties({ _videoSrc: videoUrl[videoKeys[0]],_singleVideo: true});
+        }
         else {
           const qualitySelect = videoKeys.map((quality) => {
             return {
@@ -249,7 +250,7 @@
               source: videoUrl[quality]
             }
           });
-          this.set('_qualitySelect', qualitySelect);
+          this.setProperties({ _videoSrc: videoUrl[videoKeys[0]], _singleVideo: false, _qualitySelect: qualitySelect });
         }
       }
     }
@@ -277,7 +278,7 @@
       this.updateStyles({'--video-seek-knob': "var(--video-theme-color)" });
     }
     _seekMouseLeave() {
-      this.updateStyles({'--video-seek-knob': "transparent" });
+      if (!this.$.video.paused) this.updateStyles({'--video-seek-knob': "transparent" });
     }
     _setBarColor(color) {
       this.updateStyles({'--video-theme-color': color });
