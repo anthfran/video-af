@@ -164,18 +164,9 @@
     static get is() { return 'video-af'; }
     static get properties() {
       return {
-        videoTitle: String,
-        videoUrl: {
-          type: Object,
-          observer: '_parseVideoUrl'
-        },
         posterUrl: String,
-        _qualitySelect: Array,
-        _videoSrc: String,
-        _position: {
-          type: Number,
-          value: 0
-        },
+        videoTitle: String,
+        videoUrl: { type: Object, observer: '_parseVideoUrl' },
         _buffer: {
           type: Object,
           value: {
@@ -184,17 +175,14 @@
             duration:0
           }
         },
+        _hideControls: { type: Boolean, value: false },
+        _hidePlaybutton: { type: Boolean, value: false },
+        _position: { type: Number, value: 0 },
+        _qualitySelect: Array,
+        _singleVideo: Boolean,
         _timeCurrent: { type: String, value: "00:00" },
         _timeTotal: { type: String, value: "00:00" },
-        _hideControls: {
-          type: Boolean,
-          value: false
-        },
-        _hidePlaybutton :{
-          type: Boolean,
-          value: false
-        },
-        _singleVideo: Boolean
+        _videoSrc: String
       };
     }
     _parseVideoUrl(videoUrl) {
