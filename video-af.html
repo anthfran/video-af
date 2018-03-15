@@ -60,6 +60,17 @@
     .controlbuttons{
       display: inline-block;
     }
+    .mid-play-button {
+      position: absolute;
+      top: calc(50% - 50px);
+      left: calc(50% - 50px);;
+    }
+    .mid-play-button-icon {
+      color: white;
+      height: 100px;
+      width: 100px;
+      opacity: .85;
+    }
     .time {
       color: white;
       padding-left: 12px;
@@ -109,6 +120,9 @@
       </video>
       <div class="title" hidden$=[[_hideControls]]>
         [[videoTitle]]
+      </div>
+      <div class="mid-play-button" hidden$=[[_hidePlaybutton]]>
+        <paper-icon-button id="play" class="mid-play-button-icon" icon="av:play-arrow" on-click="_tapPlayPause"></paper-icon-button>
       </div>
       <div class="controls" hidden$=[[_hideControls]] on-mouseleave="_videoMouseLeave">
         <video-slider class="seek" value="{{_position}}" on-change="_changePosition" on-mouseenter="_seekMouseEnter" on-mouseleave="_seekMouseLeave" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
@@ -173,6 +187,10 @@ class VideoAf extends Polymer.Element {
       _timeCurrent: { type: String, value: "00:00" },
       _timeTotal: { type: String, value: "00:00" },
       _hideControls: {
+        type: Boolean,
+        value: false
+      },
+      _hidePlaybutton :{
         type: Boolean,
         value: false
       },
@@ -260,9 +278,12 @@ class VideoAf extends Polymer.Element {
     if (this.$.video.paused) {
       this.$.video.play();
       this.$.play.icon = "av:pause";
+      this.set('_hidePlaybutton', true);
     } else {
       this.$.video.pause();
       this.$.play.icon = "av:play-arrow";
+      this.set('_hidePlaybutton', false);
+
     }
   }
   _qualityChange(e) {
