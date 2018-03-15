@@ -66,6 +66,15 @@
       position: relative;
       top: 1px;
     }
+    .title {
+      position: absolute;
+      top: 0;
+      padding: 8px;
+      color: white;
+      font-size: 16px;
+      width: calc(100% - 16px);
+      height: 18px;
+    }
     .seek {
       width: 100%;
       padding: 0;
@@ -98,7 +107,9 @@
       <source id="videosrc" src=[[_videoSrc]] type="video/mp4" >
         Your browser does not support the video tag.
       </video>
-
+      <div class="title" hidden$=[[_hideControls]]>
+        [[videoTitle]]
+      </div>
       <div class="controls" hidden$=[[_hideControls]] on-mouseleave="_videoMouseLeave">
         <video-slider class="seek" value="{{_position}}" on-change="_changePosition" on-mouseenter="_seekMouseEnter" on-mouseleave="_seekMouseLeave" secondary-progress="[[_buffer.downloaded]]" min="0" max="[[_buffer.duration]]">
         </video-slider>
@@ -139,6 +150,7 @@ class VideoAf extends Polymer.Element {
   static get is() { return 'video-af'; }
   static get properties() {
     return {
+      videoTitle: String,
       videoUrl: {
         type: Object,
         observer: '_parseVideoUrl'
