@@ -168,6 +168,9 @@
     static get is() { return 'video-af'; }
     static get properties() {
       return {
+        barColor: { type: String, observer: '_setBarColor'},
+        barBufferColor: { type: String, observer: '_setBarBufferColor'},
+        textColor: { type: String, observer: '_setTextColor'},
         posterUrl: String,
         videoTitle: String,
         videoUrl: { type: Object, observer: '_parseVideoUrl' },
@@ -217,20 +220,24 @@
     }
     _onLoadedMetadata() {
       const duration = this.$.video.duration;
-      this.set('_buffer.duration', duration);
       const humanTime = this._convertSecondsToTime(duration);
-      this.set('_timeTotal', humanTime);
+      console.log(duration);
+
+      this.setProperties({
+        _timeTotal: humanTime,
+        _buffer: {
+          duration: duration
+        }
+      });
     }
 
     _onTimeUpdate() {
       const currentTime = this.$.video.currentTime;
-      this.set('_position', currentTime);
-      this.set('_timeCurrent', this._convertSecondsToTime(currentTime));
+      this.setProperties({_position: currentTime, _timeCurrent: this._convertSecondsToTime(currentTime) });
     }
     _parseVideoUrl(videoUrl) {
       if (typeof videoUrl === "string") {
-        this.set('_videoSrc', videoUrl);
-        this.set('_singleVideo', true);
+        this.setProperties({_videoSrc: videoUrl, _singleVideo: true });
       } else if (typeof videoUrl === "object"){
         const videoKeys = Object.keys(videoUrl);
         this.set('_videoSrc', videoUrl[videoKeys[0]]);
@@ -267,10 +274,20 @@
       }
     }
     _seekMouseEnter() {
-      this.updateStyles({'--video-seek-knob': "var(--paper-light-blue-500)" });
+      this.updateStyles({'--video-seek-knob': "var(--video-theme-color)" });
     }
     _seekMouseLeave() {
       this.updateStyles({'--video-seek-knob': "transparent" });
+    }
+    _setBarColor(color) {
+      this.updateStyles({'--video-theme-color': color });
+
+    }
+    _setBarBufferColor(color) {
+
+    }
+    _setTextColor(color) {
+      this.updateStyles({'--button-text-color': color });
     }
     _tapPlayPause() {
       if (this.$.video.paused) {
