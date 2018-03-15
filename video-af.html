@@ -40,7 +40,7 @@ i<link rel="import" href="../polymer/polymer-element.html">
     }
     .controls {
       position: absolute;
-      bottom: 4px;
+      bottom: 3px;
       left: 0;
       height: 45px;
       width: 100%;
@@ -75,10 +75,11 @@ i<link rel="import" href="../polymer/polymer-element.html">
       --video-slider-knob-start-border-color: var(--video-seek-knob);
       --video-slider-knob-start-color: var(--video-seek-knob);
       --video-slider-knob-color: var(--video-seek-knob);
+      --video-slider-container-color: rgba(255,255,255,0.25);
     }
     .time {
       color: var(--button-text-color);
-      padding-left: 12px;
+      padding-left: 16px;
       position: relative;
       top: 1px;
     }
@@ -282,10 +283,9 @@ i<link rel="import" href="../polymer/polymer-element.html">
     }
     _setBarColor(color) {
       this.updateStyles({'--video-theme-color': color });
-
     }
     _setBarBufferColor(color) {
-
+      this.updateStyles({'--video-theme-secondary-color': color });
     }
     _setTextColor(color) {
       this.updateStyles({'--button-text-color': color });
